@@ -1,0 +1,70 @@
+
+Specialty {
+id integer pk increments
+specialty varchar(150)
+}
+
+Doctor {
+id integer pk increments
+Name varchar(70)
+Surname varchar(100)
+Sex varchar(1)
+Specialty_id integer > Specialty.id
+Phone_id integer
+}
+
+Phones {
+id integer pk increments
+Phone_number integer
+Office_id integer > Medical_office.id
+}
+
+Medical_office {
+id integer
+id integer
+id integer
+}
+
+Schedule {
+id integer pk increments
+doctor_id integer > Doctor.id
+patient_id integer > Patient.id
+appointment_time datetime
+office_id integer > Medical_office.id
+}
+
+Patient {
+id integer pk increments
+Name varchar(70)
+Surname varchar(100)
+age integer
+adress varchar(255)
+history_id integer > Case_history.id
+diagnose_id integer > Diagnosis.id
+survey_results_id integer > Survey_results.id
+insurance_number varchar(25)
+}
+
+Case_history {
+id integer pk increments
+history_unique_ID varchar(25)
+}
+
+Diagnosis {
+id integer pk increments
+diagnosis varchar(255)
+code_id integer > Diagnosis_code.id
+}
+
+Diagnosis_code {
+id integer pk increments
+code varchar(6)
+}
+
+Survey_results {
+id integer pk increments
+type varchar(255)
+survey_result text
+patient_id integer > Patient.id
+}
+
