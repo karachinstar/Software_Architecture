@@ -1,0 +1,271 @@
+openapi: 3.0.0
+info:
+  title: OpenAPI спецификация заказа на аренду облачных ресурсов
+  version: 0.0.1
+servers: 
+  - url: http://localhost:8080/api/v1/
+    description: Dev server
+paths:
+  /clouds/{client_id}:
+    get:
+      summary: Метод получения списка всех арендованных облачных ресурсов клиента client_id
+      tags:
+        - Clouds
+      operationId: getCloudsForCustomerId
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          description: Идентификатор клиента
+          schema:
+            type: integer
+          example: 354
+      responses:
+        "200":
+           description: Успешный ответ со списком арендованных ресурсов
+           content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Cloud"
+        "5XX":
+           description: Ошибка сервера. Возвращант описание ошибки
+           content:
+             application/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+    post:
+      summary: Метод создания заказа на ресурсы облака для клиента client_id
+      tags:
+        - Clouds
+      operationId: createCloudForUser
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          description: Идентификатор клиента
+          schema:
+            type: integer
+          example: 456
+      requestBody: 
+        required: true
+        content:
+          adplication/json:
+            schema:
+              $ref: "#/components/schemas/Cloud"
+      responses:
+        "200":
+          description: Заказа на облачные ресурсы успешно создан
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Cloud"
+        '400':
+          description: Некорректный запрос. Возвращает некорректный запрос
+          content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+        "5XX":
+          description: Ошибка сервера. Возвращант описание ошибки
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /clouds/{client_id}/{cloud_id}:
+    get:
+      summary: Метод получения данных о ресурce cloud_id для клиента client_id
+      tags:
+        - Clouds
+      operationId: getCloudById
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          description: Идентификатор клиента
+          schema:
+            type: integer
+          example: 345
+        - name: cloud_id
+          in: path
+          required: true
+          description: Идентификатор заказа облака
+          schema:
+            type: integer
+          example: 234
+      responses:
+        "200":
+          description: Запрос выполнен успешно
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Cloud"
+        "400":
+          description: Некорректный запрос. Возвращает некорректный запрос
+          content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+        "404":
+          description: Ресурс не найден
+          content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+        "5XX":
+           description: Ошибка сервера. Возвращант описание ошибки
+           content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+    put:
+      summary: Метод изменения заказа на ресурс cloud_id дляклиента client_id
+      tags:
+        - Clouds
+      operationId: updateCloudById
+      description: Обновляет заказ на облачные ресурсы
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          description: Идентификатор клиента
+          schema:
+            type: integer
+          example: 345
+        - name: cloud_id
+          in: path
+          required: true
+          description: Идентификатор заказа облака
+          schema:
+            type: integer
+          example: 234
+      requestBody: 
+        required: true
+        content:
+          adplication/json:
+            schema:
+              $ref: "#/components/schemas/Cloud"
+      responses:
+        "200":
+          description: Заказ успешно обновлен
+          content:
+            adplication/json:
+              schema:
+                $ref: "#/components/schemas/Cloud"
+        "400":
+          description: Некорректный запрос. Возвращает некорректный запрос
+          content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+        "404":
+          description: Ресурс с указанным cloud_id не найден
+          content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+        "5XX":
+           description: Ошибка сервера. Возвращант описание ошибки
+           content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+    delete:
+      summary: Метод отмены заказа на ресурс cloud_id для клиента client_id
+      tags: 
+        - Clouds
+      operationId: cancelCloudById
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          description: Идентификатор клиента
+          schema:
+            type: integer
+          example: 345
+        - name: cloud_id
+          in: path
+          required: true
+          description: Идентификатор заказа облака
+          schema:
+            type: integer
+          example: 234
+      responses:
+        "200":
+           description: Успешный ответ заказом облака по ID
+           content:
+             adplication/json: {}
+        "400":
+          description: Некорректный запрос. Возвращает некорректный запрос
+          content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+        '404':
+          description: Ресурс с не найден
+          content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+        "5XX":
+           description: Ошибка сервера. Возвращант описание ошибки
+           content:
+             adplication/json:
+               schema:
+                 $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Cloud:
+      type: object
+      required:
+        - cloud_id
+        - OS
+        - CPU
+        - HDD
+        - RAM
+        - duration
+      properties:
+        cloud_id:
+          type: integer
+          minimum: 1
+          example: 134
+          description: Id ресурса
+        OS:
+          type: string
+          enum:
+            - Windows
+            - Linux
+          description: Операционная система сервера
+        CPU:
+          type: integer
+          minimum: 1
+          example: 4
+          description: Количество ядер процессора
+        RAM:
+          type: integer
+          minimum: 1
+          example: 16
+          description: Доступная оперативная память, Гбт
+        HDD:
+          type: integer
+          minimum: 512
+          example: 1024
+          description: Доступная память жесткого диска, Мбт
+        duration:
+          type: integer
+          minimum: 1
+          example: 3
+          description: Длительность аренды в месяцах
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          description: Код ошибки
+        message:
+          type: string
+          description: Описание ошибки
